@@ -45,6 +45,15 @@ class User(BaseModel):
     description : Union[str, None] = "None Description"
     cost        : Union[int, None] = 0
 
+
+class _User:
+    fullName    : str
+    address     : str
+    subject     : str
+    tax         : str
+    description : Union[str, None] = "None Description"
+    cost        : Union[int, None] = 0
+
 @app.get("/test")
 async def root():
     return {"message": "Hello World"}
@@ -69,13 +78,23 @@ async def root(user: User):
         return payload
 @app.post("/user/edit")
 async def root(user: User):
+    editUser = d_user.user(user, app.collection)
     print(user)
     return {"message": "edit user"}
-
-@app.post("/user/remove")
-async def root(user: User):
-    print(user)
+@app.get("/user/load_user/")
+async def root(id: str = ""):
+    user = _User
+    user.fullName = ""
+    user.address = ""
+    user.subject = ""
+    user.tax = ""
+    _user = d_user.user(user, app.collection)
+    load_user = _user.load_user(id)
+    return load_user
+@app.post("/user/remove/")
+async def root(ssid:str):
+    print(ssid)
     return {"message": "remove user"}
 
 if __name__ == "__main__":
-    run(app, host="0.0.0.0", port=80)
+    run(app, host="127.0.0.1", port=3000)
